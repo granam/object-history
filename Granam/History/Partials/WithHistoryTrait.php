@@ -26,7 +26,7 @@ trait WithHistoryTrait
     {
         $changingCall = $this->findChangingCall(false /* only methods from outside */); // find a last call outside of this class (that causing current change)
         $this->history[] = [
-            'changeBy' => [
+            'changedBy' => [
                 'name' => $this->formatToSentence($changingCall['function']),
                 'with' => $this->extractArgumentsDescription($changingCall['args']),
             ],
@@ -106,7 +106,7 @@ trait WithHistoryTrait
     {
         $changingCall = $this->findChangingCall(true /* from inside / by this class */);
         $this->history[] = [
-            'changeBy' => [
+            'changedBy' => [
                 'name' => $this->formatToSentence($changingCall['function']),
                 'with' => $this->extractArgumentsDescription($changingCall['args']),
             ],

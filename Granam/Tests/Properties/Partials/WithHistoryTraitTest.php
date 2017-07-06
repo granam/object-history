@@ -18,7 +18,7 @@ class WithHistoryTraitTest extends TestCase
         $somethingHistorical = new SomethingHistorical('foo', 123, 456.789);
         $changes = [];
         $changes[] = [
-            'changeBy' => [
+            'changedBy' => [
                 'name' => 'i can get history of an object',
                 'with' => ValueDescriber::describe($randomData),
             ],
@@ -28,7 +28,7 @@ class WithHistoryTraitTest extends TestCase
 
         $somethingHistorical->setBar(999);
         $changes[] = [
-            'changeBy' => [
+            'changedBy' => [
                 'name' => 'i can get history of an object', // external method expected
                 'with' => ValueDescriber::describe($randomData),
             ],
@@ -38,7 +38,7 @@ class WithHistoryTraitTest extends TestCase
 
         $somethingHistorical->setBaz(159);
         $changes[] = [
-            'changeBy' => [
+            'changedBy' => [
                 'name' => 'set baz', // lastly called internal / changed object method expected
                 'with' => ValueDescriber::describe(159.0),
             ],
@@ -49,7 +49,7 @@ class WithHistoryTraitTest extends TestCase
         $somethingHistorical->merge($somethingHistorical);
         $adopted = array_merge($changes, $changes);
         $adopted[] = [
-            'changeBy' => [
+            'changedBy' => [
                 'name' => 'merge', // lastly called internal / changed object method expected
                 'with' => ValueDescriber::describe($somethingHistorical),
             ],
@@ -61,7 +61,7 @@ class WithHistoryTraitTest extends TestCase
         $somethingHistorical->merge($somethingLessHistorical);
         array_unshift($adopted, $minorChange); // adopted history goes first
         $adopted[] = [
-            'changeBy' => [
+            'changedBy' => [
                 'name' => 'merge', // lastly called internal / changed object method expected
                 'with' => ValueDescriber::describe($somethingLessHistorical),
             ],
