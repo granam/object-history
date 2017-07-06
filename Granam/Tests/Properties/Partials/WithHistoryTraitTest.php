@@ -100,7 +100,7 @@ class WithHistoryTraitTest extends TestCase
 }
 
 /** inner */
-class SomethingHistorical
+class SomethingHistorical implements WithHistory
 {
     use WithHistoryTrait;
 
@@ -122,7 +122,7 @@ class SomethingHistorical
         $this->foo = $foo;
         $this->bar = $bar;
         $this->baz = $baz;
-        $this->noticeChangeFromOutside(null);
+        $this->noticeHistoryChangeFromOutside(null);
     }
 
     /**
@@ -155,7 +155,7 @@ class SomethingHistorical
     public function setFoo(string $foo): void
     {
         $this->foo = $foo;
-        $this->noticeChangeFromOutside($foo);
+        $this->noticeHistoryChangeFromOutside($foo);
     }
 
     /**
@@ -164,7 +164,7 @@ class SomethingHistorical
     public function setBar(int $bar): void
     {
         $this->bar = $bar;
-        $this->noticeChangeFromOutside($bar);
+        $this->noticeHistoryChangeFromOutside($bar);
     }
 
     /**
@@ -173,16 +173,16 @@ class SomethingHistorical
     public function setBaz(float $baz): void
     {
         $this->baz = $baz;
-        $this->noticeChangeFromInside($baz);
+        $this->noticeHistoryChangeFromInside($baz);
     }
 
     /**
-     * @param WithHistory|WithHistoryTrait $somethingHistorical
+     * @param WithHistory $somethingHistorical
      */
-    public function merge($somethingHistorical): void
+    public function merge(WithHistory $somethingHistorical): void
     {
         $this->adoptHistory($somethingHistorical);
-        $this->noticeChangeFromInside('merged');
+        $this->noticeHistoryChangeFromInside('merged');
     }
 }
 /** inner */

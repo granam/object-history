@@ -22,7 +22,7 @@ trait WithHistoryTrait
     /**
      * @param mixed $result
      */
-    protected function noticeChangeFromOutside($result): void
+    protected function noticeHistoryChangeFromOutside($result): void
     {
         $changingCall = $this->findChangingCall(false /* only methods from outside */); // find a last call outside of this class (that causing current change)
         $this->history[] = [
@@ -44,7 +44,7 @@ trait WithHistoryTrait
         foreach (debug_backtrace() as $call) {
             if (($fromInside
                     && (!array_key_exists('function', $call)
-                        || !in_array($call['function'], [__FUNCTION__, 'noticeChangeFromInside'], true)
+                        || !in_array($call['function'], [__FUNCTION__, 'noticeHistoryChangeFromInside'], true)
                     )
                 )
                 || ((!array_key_exists('object', $call) || $call['object'] !== $this)
@@ -102,7 +102,7 @@ trait WithHistoryTrait
     /**
      * @param mixed $result
      */
-    protected function noticeChangeFromInside($result): void
+    protected function noticeHistoryChangeFromInside($result): void
     {
         $changingCall = $this->findChangingCall(true /* from inside / by this class */);
         $this->history[] = [
@@ -115,9 +115,9 @@ trait WithHistoryTrait
     }
 
     /**
-     * @param WithHistory|WithHistoryTrait $somethingWithHistory
+     * @param WithHistory $somethingWithHistory
      */
-    protected function adoptHistory($somethingWithHistory): void
+    protected function adoptHistory(WithHistory $somethingWithHistory): void
     {
         /** @var WithHistoryTrait $somethingWithHistory */
         // previous history FIRST, current after
