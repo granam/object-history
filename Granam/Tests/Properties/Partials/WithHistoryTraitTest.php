@@ -22,7 +22,7 @@ class WithHistoryTraitTest extends TestCase
                 'name' => 'i can get history of an object',
                 'with' => ValueDescriber::describe($randomData),
             ],
-            'result' => null,
+            'result' => $somethingHistorical,
         ];
         self::assertEquals($changes, $somethingHistorical->getHistory());
 
@@ -97,6 +97,34 @@ class WithHistoryTraitTest extends TestCase
                 throw new \LogicException();
         }
     }
+
+    /**
+     * @test
+     */
+    public function History_made_by_same_class_is_ignored_for_outside_changes(): void
+    {
+        $somethingWithHistoricalRoots = new SomethingWithHistoricalRoots('ink', 234, 456.567);
+        $replaced = $somethingWithHistoricalRoots->replaceFoo('paper');
+        self::assertEquals(
+            [
+                [
+                    'changedBy' => [
+                        'name' => 'history made by same class is ignored for outside changes',
+                        'with' => '',
+                    ],
+                    'result' => $somethingWithHistoricalRoots,
+                ],
+                [
+                    'changedBy' => [
+                        'name' => 'history made by same class is ignored for outside changes',
+                        'with' => '',
+                    ],
+                    'result' => $replaced,
+                ],
+            ],
+            $replaced->getHistory()
+        );
+    }
 }
 
 /** inner */
@@ -122,7 +150,7 @@ class SomethingHistorical implements WithHistory
         $this->foo = $foo;
         $this->bar = $bar;
         $this->baz = $baz;
-        $this->noticeHistoryChangeFromOutside(null);
+        $this->noticeHistoryChangeFromOutside($this);
     }
 
     /**
@@ -184,6 +212,12 @@ class SomethingHistorical implements WithHistory
         $this->adoptHistory($somethingHistorical);
         $this->noticeHistoryChangeFromInside('merged');
     }
+
+    public function replaceFoo(string $foo)
+    {
+        return new static($foo, $this->getBar(), $this->getBaz());
+    }
+
 }
 /** inner */
 class SomethingLessHistorical implements WithHistory
@@ -203,4 +237,16 @@ class SomethingLessHistorical implements WithHistory
         return $this->someHistory;
     }
 
+}
+
+class SomethingWithHistoricalRoots extends SomethingHistorical
+{
+
+    public function replaceFoo(string $foo): SomethingHistorical
+    {
+        $replaced = parent::replaceFoo($foo);
+        $replaced->adoptHistory($this);
+
+        return $replaced;
+    }
 }

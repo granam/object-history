@@ -48,10 +48,7 @@ trait WithHistoryTrait
                     )
                 )
                 || ((!array_key_exists('object', $call) || $call['object'] !== $this)
-                    && (!array_key_exists('class', $call)
-                        || (!in_array($call['class'], [__CLASS__, get_class($this)], true)
-                        )
-                    )
+                    && (!array_key_exists('class', $call) || !is_a($this, $call['class']))
                 )
             ) {
                 return $call;
