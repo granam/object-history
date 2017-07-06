@@ -1,0 +1,20 @@
+{
+  "name": "granam/object-history",
+  "license": "MIT",
+  "type": "project",
+  "description": "Changes of an object fetched from debug_backtrace",
+  "autoload": {
+    "psr-4": {
+      "Granam\\": "Granam/"
+    }
+  },
+  "require": {
+    "php": ">=7.1",
+    "granam/tools": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.0",
+    "mockery/mockery": "~0.9",
+    "granam/exceptions-hierarchy": "~4.0"
+  }
+}
