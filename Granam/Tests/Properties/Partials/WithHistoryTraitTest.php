@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Granam\Tests\Properties\Partials;
 
 use Granam\History\Partials\WithHistory;
@@ -219,6 +221,7 @@ class SomethingHistorical implements WithHistory
     }
 
 }
+
 /** inner */
 class SomethingLessHistorical implements WithHistory
 {

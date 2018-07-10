@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Granam\History\Partials;
 
 use Granam\Tools\ValueDescriber;
@@ -41,14 +43,14 @@ trait WithHistoryTrait
     private function findChangingCall(bool $fromInside): array
     {
         /** @var array $call */
-        foreach (debug_backtrace() as $call) {
+        foreach (\debug_backtrace() as $call) {
             if (($fromInside
-                    && (!array_key_exists('function', $call)
-                        || !in_array($call['function'], [__FUNCTION__, 'noticeHistoryChangeFromInside'], true)
+                    && (!\array_key_exists('function', $call)
+                        || !\in_array($call['function'], [__FUNCTION__, 'noticeHistoryChangeFromInside'], true)
                     )
                 )
-                || ((!array_key_exists('object', $call) || $call['object'] !== $this)
-                    && (!array_key_exists('class', $call) || !is_a($this, $call['class']))
+                || ((!\array_key_exists('object', $call) || $call['object'] !== $this)
+                    && (!\array_key_exists('class', $call) || !\is_a($this, $call['class']))
                 )
             ) {
                 return $call;
@@ -66,20 +68,12 @@ trait WithHistoryTrait
      */
     private function formatToSentence(string $string): string
     {
-        preg_match_all('~[[:upper:]]?[[:lower:]]*~', $string, $matches);
-        $captures = array_filter($matches[0], function ($capture) {
+        \preg_match_all('~[[:upper:]]?[[:lower:]]*~', $string, $matches);
+        $captures = \array_filter($matches[0], function ($capture) {
             return $capture !== '';
         });
 
-        return implode(
-            ' ',
-            array_map(
-                function ($name) {
-                    return lcfirst($name);
-                },
-                $captures
-            )
-        );
+        return \implode(' ', \array_map('lcfirst', $captures));
     }
 
     /**
@@ -93,7 +87,7 @@ trait WithHistoryTrait
             $descriptions[] = ValueDescriber::describe($argument);
         }
 
-        return implode(',', $descriptions);
+        return \implode(',', $descriptions);
     }
 
     /**
@@ -118,6 +112,6 @@ trait WithHistoryTrait
     {
         /** @var WithHistoryTrait $somethingWithHistory */
         // previous history FIRST, current after
-        $this->history = array_merge($somethingWithHistory->getHistory(), $this->getHistory());
+        $this->history = \array_merge($somethingWithHistory->getHistory(), $this->getHistory());
     }
 }
